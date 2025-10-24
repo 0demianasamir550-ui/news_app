@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/home/news/news_item.dart';
 import '../../api/api_manager.dart';
 import '../../model/NewsResponse.dart' as news;
 import '../../model/SourceResponse.dart' as src;
@@ -14,6 +15,7 @@ class NewWidget extends StatefulWidget {
 }
 
 class _NewWidgetState extends State<NewWidget> {
+  late double height;
   late Future<news.NewsResponse> newsFuture;
 
   @override
@@ -22,26 +24,20 @@ class _NewWidgetState extends State<NewWidget> {
     newsFuture = ApiManager.getNewsBySourceId(widget.source.id ?? '');
   }
 
-  void _reloadNews() {
-    setState(() {
-      newsFuture = ApiManager.getNewsBySourceId(widget.source.id ?? '');
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator( // ✅ سحب لتحديث البيانات
+    height = MediaQuery.of(context).size.height;
+
+    return RefreshIndicator(
       onRefresh: () async {
         _reloadNews();
-        await Future.delayed(const Duration(seconds: 1)); // عشان يظهر الـ animation
+        await Future.delayed(const Duration(seconds: 1));
       },
       child: FutureBuilder<news.NewsResponse>(
         future: newsFuture,
         builder: (context, AsyncSnapshot<news.NewsResponse> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(
               child: Column(
@@ -82,21 +78,23 @@ class _NewWidgetState extends State<NewWidget> {
             return const Center(child: Text('No news available'));
           }
 
-          return ListView.builder(
-            physics: const AlwaysScrollableScrollPhysics(), // ✅ ضروري عشان السحب يشتغل حتى لو القائمة قصيرة
+          return ListView.separated(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.only(top: height * 0.02),
+            itemBuilder: (context, index) =>
+                NewsItem(news: newsList[index]),
+            separatorBuilder: (context, index) =>
+                SizedBox(height: height * 0.02),
             itemCount: newsList.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  newsList[index].title ?? '',
-                  style: Theme.of(context).textTheme.labelMedium,
-                ),
-              );
-            },
           );
         },
       ),
     );
+  }
+
+  void _reloadNews() {
+    setState(() {
+      newsFuture = ApiManager.getNewsBySourceId(widget.source.id ?? '');
+    });
   }
 }
