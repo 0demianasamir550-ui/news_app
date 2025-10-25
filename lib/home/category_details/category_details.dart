@@ -1,11 +1,15 @@
+
 import 'package:flutter/material.dart';
 import 'package:news_app/api/api_manager.dart';
 import 'package:news_app/home/category_details/sourse_tab_widget.dart';
 import 'package:news_app/model/SourceResponse.dart';
 import 'package:news_app/utils/app_colors.dart';
 
+import '../../model/category.dart';
+
 class CategoryDetails extends StatefulWidget {
-  const CategoryDetails({super.key});
+  final Category category;
+  const CategoryDetails({super.key, required this.category});
 
   @override
   State<CategoryDetails> createState() => _CategoryDetailsState();
@@ -15,7 +19,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<SourceResponse>(
-      future: ApiManager.getSources(),
+      future: ApiManager.getSources(categoryId: widget.category.id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -36,7 +40,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                 ),
                 onPressed: () {
                   setState(() {
-                    ApiManager.getSources();
+                    ApiManager.getSources(categoryId: widget.category.id);
                   });
                 },
                 child: Text(
@@ -59,7 +63,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                 ),
                 onPressed: () {
                   setState(() {
-                    ApiManager.getSources();
+                    ApiManager.getSources(categoryId: widget.category.id);
                   });
                 },
                 child: Text(
@@ -73,15 +77,6 @@ class _CategoryDetailsState extends State<CategoryDetails> {
 
         var sourcesList = snapshot.data?.sources ?? [];
         return SourceTabWidget(sourcesList: sourcesList);
-
-        return ListView.builder(
-          itemCount: sourcesList.length, // ✅ لازم تفضل كده مش itemsCount
-          itemBuilder: (context, index) {
-            return Text(
-              sourcesList[index].name ?? '',
-            );
-          },
-        );
       },
     );
   }
