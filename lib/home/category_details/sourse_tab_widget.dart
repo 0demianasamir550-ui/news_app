@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/home/category_details/widget/source_name.dart';
 import 'package:news_app/home/news/new_widget.dart';
-import 'package:news_app/model/SourceResponse.dart' as source;
-import 'package:news_app/utils/app_colors.dart';
+import '../../model/SourceResponse.dart' as src;
+import '../../utils/app_colors.dart';
+ // هنا افترضت إنك عندك widget صغير للتاب
 
 class SourceTabWidget extends StatefulWidget {
-  final List<source.Source> sourcesList;
+  final List<src.Source> sourcesList;
   const SourceTabWidget({super.key, required this.sourcesList});
 
   @override
@@ -22,12 +23,9 @@ class _SourceTabWidgetState extends State<SourceTabWidget> {
       child: Column(
         children: [
           TabBar(
-            tabAlignment: TabAlignment.start, // ✅ يبدأ من أول الشاشة
-            dividerColor: AppColors.transparentColor,
-            indicatorColor: Theme.of(context).splashColor,
+            tabAlignment: TabAlignment.start,
             isScrollable: true,
-            padding: EdgeInsets.zero, // ✅ بدون حواف إضافية
-            labelPadding: const EdgeInsets.symmetric(horizontal: 8), // ✅ مسافة بسيطة بين التابات
+            indicatorColor: Theme.of(context).splashColor,
             onTap: (index) {
               setState(() {
                 selectedIndex = index;
