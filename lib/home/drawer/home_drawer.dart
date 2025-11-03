@@ -15,6 +15,7 @@ class HomeDrawer extends StatelessWidget {
     var height = MediaQuery.of(context).size.height;
     return Column(
       children: [
+
         Container(
           width: double.infinity,
           height: height * 0.20,
@@ -25,6 +26,8 @@ class HomeDrawer extends StatelessWidget {
             style: AppStyles.bold24Black,
           ),
         ),
+
+
         InkWell(
           onTap: () {
             onDrawerItemClick();
@@ -34,19 +37,92 @@ class HomeDrawer extends StatelessWidget {
             text: 'Go To Home',
           ),
         ),
+
         const DividerItem(),
+
+
         const DrawerItem(
           iconName: AssetsManager.themeIcon,
           text: 'Theme',
         ),
-        const AppConfigItem(name: 'Dark'),
+        AppConfigItem(
+          name: 'Dark',
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text('Choose Theme Mode'),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        leading: const Icon(Icons.dark_mode),
+                        title: const Text('Dark Mode'),
+                        onTap: () {
+
+                          Navigator.pop(context);
+                        },
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.light_mode),
+                        title: const Text('Light Mode'),
+                        onTap: () {
+
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        ),
+
         SizedBox(height: height * 0.02),
         const DividerItem(),
+
+
         const DrawerItem(
           iconName: AssetsManager.languageIcon,
           text: 'Language',
         ),
-        const AppConfigItem(name: 'English'),
+        AppConfigItem(
+          name: 'English',
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text('Choose Language'),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        leading: const Icon(Icons.language),
+                        title: const Text('English'),
+                        onTap: () {
+
+                          Navigator.pop(context);
+                        },
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.translate),
+                        title: const Text('Arabic'),
+                        onTap: () {
+
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        ),
+
         SizedBox(height: height * 0.02),
       ],
     );
